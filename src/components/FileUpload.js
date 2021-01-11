@@ -1,7 +1,7 @@
 import React from "react";
 import ProgressBar from './ProgressBar'
 
-const FileUpload = ({uploadFile,handleFileSave,progressState}) => {
+const FileUpload = ({uploadFile,handleFileSave,progressState,userName}) => {
   return (
     <div className="d-grid gap-3">
       <div className="input-group">
@@ -15,7 +15,9 @@ const FileUpload = ({uploadFile,handleFileSave,progressState}) => {
       </div>
       {progressState.active && <ProgressBar/>}
       <input
-        className="btn btn-dark"
+        className={`btn btn-dark ${
+          userName === "" || userName === "unnamed" ? "disabled" : ""
+        }`}
         type="button"
         value="Upload File (only .pdf files)"
         onClick={handleFileSave}

@@ -63,6 +63,9 @@ function FormContainer() {
     } else {
         setAlert({ isAlert: true, alertData: "No file selected" });
     }
+    setTimeout(() =>{
+      setAlert({isAlert: false, alertData:""})
+    },5000)
   };
   const toggleDownloadView = (e) => {
     setisDownloadState(e.target.checked);
@@ -85,9 +88,9 @@ function FormContainer() {
         <FileDownload downloadFile={downloadFile} userName={userName} />
       ) : (
         
-        <FileUpload handleFileSave={handleFileSave} uploadFile={uploadFile} progressState={progressState} />
+        <FileUpload handleFileSave={handleFileSave} uploadFile={uploadFile} progressState={progressState} userName={userName} />
       )}
-      {alert.isAlert && <Alert data={alert.alertData} />}
+      {alert.isAlert && <Alert data={alert.alertData} setAlert={setAlert}/>}
     </div>
   );
 }
