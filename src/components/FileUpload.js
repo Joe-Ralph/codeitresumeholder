@@ -1,6 +1,7 @@
 import React from "react";
+import ProgressBar from './ProgressBar'
 
-const FileUpload = ({uploadFile,handleFileSave}) => {
+const FileUpload = ({uploadFile,handleFileSave,progressState}) => {
   return (
     <div className="d-grid gap-3">
       <div className="input-group">
@@ -9,14 +10,14 @@ const FileUpload = ({uploadFile,handleFileSave}) => {
           className="custom-from"
           id="custom-file-input"
           onChange={uploadFile}
-          accept="application/pdf,application/msword,
-  application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          accept="application/pdf"
         />
       </div>
+      {progressState.active && <ProgressBar/>}
       <input
         className="btn btn-dark"
         type="button"
-        value="Upload File (only .pdf, .doc, .docx files)"
+        value="Upload File (only .pdf files)"
         onClick={handleFileSave}
       />
     </div>

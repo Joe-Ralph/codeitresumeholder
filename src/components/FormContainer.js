@@ -10,6 +10,7 @@ function FormContainer() {
   const [userName, setUserName] = useState("");
   const [isDownloadState, setisDownloadState] = useState(false);
   const [alert, setAlert] = useState({ isAlert: false, alertData: "" });
+  const [progressState, setProgressState] = useState({active: false});
   const downloadFile = (e) => {
     const storageRef = firebase.storage().ref();
     const fileRef = storageRef.child(userName);
@@ -28,7 +29,7 @@ function FormContainer() {
         else
           setAlert({
             isAlert: true,
-            alertData: "Resume for the given name not found",
+            alertData: error.code,
           });
       });
   };
@@ -45,10 +46,20 @@ function FormContainer() {
         setAlert({ isAlert: false, alertData: "" });
       const storageRef = firebase.storage().ref();
       const fileRef = storageRef.child(userName);
-      fileRef
-        .put(file)
-        .then(() => console.log("Uploaded"))
-        .catch((err) => console.log(err));
+      const uploadTask = fileRef.put(file);
+      uploadTask.on('state_changed', function(snapshot){
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgressState({active:true});
+        console.log('Upload is ' + progress + '% done');
+      }, function(error) {
+        setAlert({ isAlert: true, alertData: error })
+      }, function() {
+        console.log('Uploaded Successfully')
+        setProgressState({active:false});
+        setAlert({ isAlert: true, alertData: "Uploaded Successfully" })
+      });
+        // .then(() => console.log("Uploaded"))
+        // .catch((err) => console.log(err));
     } else {
         setAlert({ isAlert: true, alertData: "No file selected" });
     }
@@ -73,7 +84,8 @@ function FormContainer() {
       {isDownloadState ? (
         <FileDownload downloadFile={downloadFile} userName={userName} />
       ) : (
-        <FileUpload handleFileSave={handleFileSave} uploadFile={uploadFile} />
+        
+        <FileUpload handleFileSave={handleFileSave} uploadFile={uploadFile} progressState={progressState} />
       )}
       {alert.isAlert && <Alert data={alert.alertData} />}
     </div>
